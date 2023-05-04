@@ -1,0 +1,100 @@
+pages:
+    products (commitquality.com)
+    add product (commitquality.com/add-product)
+    NOT UNDER TEST: practice (commitquality.com/practice)
+    NOT UNDER TEST: login (commitquality.com/login)
+
+
+products (commitquality.com)
+    interactions to test:
+        user hovers over:
+            products link
+            add product link
+            practice link
+            learn link
+            login link
+            filter button
+            reset button
+            show more button
+            add a product button
+        user clicks
+            products link
+            add product link
+            practice link
+            learn link
+            login link
+            filter button
+                no text in field
+                text matches no products
+                text matches one product
+                text matches multiple products
+            reset button
+                no text in field
+                text in field
+            show more button
+            add a product button
+
+
+add product (commitquality.com/add-product)
+    interactions to test:
+        user hovers over:
+            submit button
+            cancel button
+        user clicks
+            submit button
+                nothing input (illegal)
+                no name input (illegal)
+                no price input (illegal)
+                no date input (illegal)
+                name input 1 character (illegal)
+                name input 2 characters (legal)
+                name input 5 characters (legal)
+                price 11 digits (illegal)
+                price 10 digits (legal)
+                price 5 digits (legal)
+                date 101 years ago (illegal)
+                date 100 years ago (legal)
+                date 50 years ago (legal)
+            cancel button
+                nothing input
+                everything inputs
+        user types
+            name field
+                random input
+            price field
+                numbers: type successfully
+                non-numbers: doesn't type successfully
+            date stocked field
+                mm: 5: inputs 5
+                mm: 13: inputs 12
+                12/dd: 1: inputs 1
+                12/dd: 35: inputs 31
+                backspace on mm: deletes mm
+                backspace on dd: deletes dd
+                backspace on yy: deletes yy
+        user tabs away from
+            name field
+                no name input (illegal)
+                name input 1 character (illegal)
+                name input 2 characters (legal)
+                name input 5 characters (legal)
+            price field
+                no price input (illegal)
+                price 11 digits (illegal)
+                price 10 digits (legal)
+                price 5 digits (legal)
+            date stocked field
+                no date input (illegal)
+                date 101 years ago: shows error
+                date 100 years ago: legal
+                date 50 years ago: legal
+                date in the future: shows error
+                leap day on non leap year: shows error
+                leap day on leap year: no error
+                
+multi-page workflows
+    test 1
+        (add product page) add a product -> (product page) see product -> (product page) filter for product
+    test 2
+        repeat test 1 twice. verify that both products are there 
+    

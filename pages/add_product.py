@@ -4,21 +4,20 @@ the page object for commitquality.com/add-product
 """
 
 from selenium.webdriver.common.by import By
+from pages.generic_page import GenericPage
 
-class AddProductPage:
+class AddProductPage(GenericPage):
+
     # URL
     URL = "https://commitquality.com/add-product"
 
+
     # Locators
-    PRODUCTS_LINK = (By.CSS_SELECTOR, '[data-testid="navbar-products"]')
+    NAME_LABEL = (By.CSS_SELECTOR, '[for="name"]')
 
-    ADD_PRODUCT_LINK = (By.CSS_SELECTOR, '[data-testid="navbar-addproduct"]')
+    PRICE_LABEL = (By.CSS_SELECTOR, '[for="price"]')
 
-    PRACTICE_LINK = (By.CSS_SELECTOR, '[data-testid="navbar-practice"]')
-
-    LEARN_LINK = (By.CSS_SELECTOR, '[data-testid="navbar-learn"]')
-
-    LOGIN_LINK = (By.CSS_SELECTOR, '[data-testid="navbar-login"]')
+    DATE_LABEL = (By.CSS_SELECTOR, '[for="dateStocked"]')
 
     NAME_FIELD = (By.CSS_SELECTOR, '[data-testid="product-textbox"]')
 
@@ -30,10 +29,20 @@ class AddProductPage:
 
     CANCEL_BUTTON = (By.CSS_SELECTOR, '[data-testid="cancel-button"]')
 
-    # Initializer
-    def __init__(self, browser):
-        self.browser = browser
+    FILLIN_ALL_FIELDS_VALIDATION = (By.CSS_SELECTOR, '[data-testid="fillin-all-fields-validation"]')
+
+    ALL_FIELDS_VALIDATION = (By.CSS_SELECTOR, '[data-testid="all-fields-validation"]')
+
 
     # Interaction Methods
-    def load(self):
-        self.browser.get(self.URL)
+
+    def get_div_after_element(self, locator):
+        return self.browser.find_element(By.CSS_SELECTOR, locator[1] + '+div')
+    
+
+    def get_fillin_all_fields_validation_text(self):
+        return self.browser.find_element(*AddProductPage.FILLIN_ALL_FIELDS_VALIDATION).text
+    
+    
+    def get_all_fields_validation_text(self):
+        return self.browser.find_element(*AddProductPage.ALL_FIELDS_VALIDATION).text

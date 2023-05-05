@@ -104,7 +104,7 @@ def test_click_filter_button_no_matches(products_page):
     # Given commitquality.com
 
     # Given the filter field matches no items in the table
-    products_page.type_filter_field("test")
+    products_page.type_field("test", ProductsPage.FILTER_FIELD)
 
     # When you click the filter button
     products_page.click(ProductsPage.FILTER_BUTTON)
@@ -121,7 +121,7 @@ def test_click_filter_button_matches(products_page,filter_string):
     # Given commitquality.com
 
     # Given the filter string matches items in the table
-    products_page.type_filter_field(filter_string)
+    products_page.type_field(filter_string, ProductsPage.FILTER_FIELD)
 
     # When you click the filter button
     products_page.click(ProductsPage.FILTER_BUTTON)
@@ -153,7 +153,7 @@ def test_click_reset_button_has_text_unfiltered(products_page):
     # Given commitquality.com
 
     # Given the filter field has text
-    products_page.type_filter_field("test")
+    products_page.type_field("test", ProductsPage.FILTER_FIELD)
 
     # Given the table hasn't been filtered
 
@@ -170,7 +170,7 @@ def test_click_reset_button_has_text_filtered(products_page):
     # Given commitquality.com
 
     # Given the filter field has text
-    products_page.type_filter_field("test")
+    products_page.type_field("test", ProductsPage.FILTER_FIELD)
 
     # Given the table has been filtered
     products_page.click(ProductsPage.FILTER_BUTTON)

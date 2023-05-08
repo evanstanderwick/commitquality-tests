@@ -5,6 +5,8 @@ the page object for commitquality.com/add-product
 
 from selenium.webdriver.common.by import By
 from pages.generic_page import GenericPage
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class AddProductPage(GenericPage):
 
@@ -46,3 +48,20 @@ class AddProductPage(GenericPage):
     
     def get_all_fields_validation_text(self):
         return self.browser.find_element(*AddProductPage.ALL_FIELDS_VALIDATION).text
+    
+
+    def get_date_num_years_ago(years: int):
+        # returns tuple ("YYYY","MM","DD")
+        num_years_ago = datetime.now() - relativedelta(years=years)
+
+        year = str(num_years_ago.year)
+        month = str(num_years_ago.month)
+        day = str(num_years_ago.day)
+
+        if (num_years_ago.month < 10):
+            month = "0" + month
+
+        if (num_years_ago.day < 10):
+            day = "0" + day
+
+        return (year, month, day)

@@ -44,7 +44,7 @@ class GenericPage:
 
     # locator: one of the locator ProductsPage class attributes
     def hover(self, locator):
-        element = self.browser.find_element(*locator)
+        element = self.get_element(locator)
         hover = ActionChains(self.browser).move_to_element(element)
         hover.perform()
         return element
@@ -52,7 +52,7 @@ class GenericPage:
 
     # locator: one of the locator ProductsPage class attributes
     def click(self, locator):
-        element = self.browser.find_element(*locator)
+        element = self.get_element(locator)
         element.click()
 
 
@@ -78,5 +78,10 @@ class GenericPage:
 
 
     def type_field(self, input: str, locator):
-        field = self.browser.find_element(*locator)
+        field = self.get_element(locator)
         field.send_keys(input)
+
+
+    def get_field_text(self, locator):
+        field = self.get_element(locator)
+        return field.get_attribute("value")

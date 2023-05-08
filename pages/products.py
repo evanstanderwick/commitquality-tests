@@ -34,6 +34,7 @@ class ProductsPage(GenericPage):
     # Interaction Methods
 
     def get_products_table_rows(self):
+        # note: this includes the header row
         return self.browser.find_elements(*ProductsPage.PRODUCTS_TABLE_ROWS)
     
 

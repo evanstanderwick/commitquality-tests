@@ -283,3 +283,231 @@ def test_click_submit_button_price_input_11_chars(add_product_page):
     # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
     text = add_product_page.get_all_fields_validation_text()
     assert text == "Errors must be resolved before submitting"
+
+
+def test_click_submit_button_price_input_10_chars(products_page, add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the name and date fields have input
+    add_product_page.type_field("testo", AddProductPage.NAME_FIELD)
+    add_product_page.type_field("01012020", AddProductPage.DATE_FIELD)
+
+    # Given the price field has 10 characters input
+    add_product_page.type_field("1234567890", AddProductPage.PRICE_FIELD)
+
+    # When you click the submit button
+    add_product_page.click(AddProductPage.SUBMIT_BUTTON)
+
+    # Then you will be taken to commitquality.com/
+    assert add_product_page.current_url() == ProductsPage.URL
+
+    # And the product you added will be at the top of the products table
+    row_data = products_page.get_products_table_first_product_data()
+
+    # row_data[0] is id
+    assert row_data[1].text == "testo"
+    assert row_data[2].text == "1234567890"
+    assert row_data[3].text == "2020-01-01"
+
+
+def test_click_submit_button_price_input_5_chars(products_page, add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the name and date fields have input
+    add_product_page.type_field("testo", AddProductPage.NAME_FIELD)
+    add_product_page.type_field("01012020", AddProductPage.DATE_FIELD)
+
+    # Given the price field has 5 characters input
+    add_product_page.type_field("12345", AddProductPage.PRICE_FIELD)
+
+    # When you click the submit button
+    add_product_page.click(AddProductPage.SUBMIT_BUTTON)
+
+    # Then you will be taken to commitquality.com/
+    assert add_product_page.current_url() == ProductsPage.URL
+
+    # And the product you added will be at the top of the products table
+    row_data = products_page.get_products_table_first_product_data()
+
+    # row_data[0] is id
+    assert row_data[1].text == "testo"
+    assert row_data[2].text == "12345"
+    assert row_data[3].text == "2020-01-01"
+
+
+def test_click_submit_button_date_101_years_ago(add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the name and price fields have input
+    add_product_page.type_field("testo", AddProductPage.NAME_FIELD)
+    add_product_page.type_field("12345", AddProductPage.PRICE_FIELD)
+
+    # Given the date field has a date 101 years ago
+    date = AddProductPage.get_date_num_years_ago(101)
+    add_product_page.type_field(date[1] + date[2] + date[0], AddProductPage.DATE_FIELD)
+
+    # When you click the submit button
+    add_product_page.click(AddProductPage.SUBMIT_BUTTON)
+
+    # Then this error will appear above the date field: "Date must not be older than 100 years."
+    text = add_product_page.get_div_after_element(AddProductPage.DATE_LABEL).text
+    assert text == "Date must not be older than 100 years."
+
+    # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
+    text = add_product_page.get_all_fields_validation_text()
+    assert text == "Errors must be resolved before submitting"
+
+
+def test_click_submit_button_date_100_years_ago(products_page, add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the name and price fields have input
+    add_product_page.type_field("testo", AddProductPage.NAME_FIELD)
+    add_product_page.type_field("12345", AddProductPage.PRICE_FIELD)
+
+    # Given the date field has a date 100 years ago
+    date = AddProductPage.get_date_num_years_ago(100)
+    add_product_page.type_field(date[1] + date[2] + date[0], AddProductPage.DATE_FIELD)
+
+    # When you click the submit button
+    add_product_page.click(AddProductPage.SUBMIT_BUTTON)
+
+    # Then you will be taken to commitquality.com/
+    assert add_product_page.current_url() == ProductsPage.URL
+
+    # And the product you added will be at the top of the products table
+    row_data = products_page.get_products_table_first_product_data()
+
+    # row_data[0] is id
+    assert row_data[1].text == "testo"
+    assert row_data[2].text == "12345"
+    assert row_data[3].text == "{year}-{month}-{day}".format(year=date[0],month=date[1],day=date[2])
+
+
+def test_click_submit_button_date_50_years_ago(products_page, add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the name and price fields have input
+    add_product_page.type_field("testo", AddProductPage.NAME_FIELD)
+    add_product_page.type_field("12345", AddProductPage.PRICE_FIELD)
+
+    # Given the date field has a date 50 years ago
+    date = AddProductPage.get_date_num_years_ago(50)
+    add_product_page.type_field(date[1] + date[2] + date[0], AddProductPage.DATE_FIELD)
+
+    # When you click the submit button
+    add_product_page.click(AddProductPage.SUBMIT_BUTTON)
+
+    # Then you will be taken to commitquality.com/
+    assert add_product_page.current_url() == ProductsPage.URL
+
+    # And the product you added will be at the top of the products table
+    row_data = products_page.get_products_table_first_product_data()
+
+    # row_data[0] is id
+    assert row_data[1].text == "testo"
+    assert row_data[2].text == "12345"
+    assert row_data[3].text == "{year}-{month}-{day}".format(year=date[0],month=date[1],day=date[2])
+
+
+def test_click_cancel_button_nothing_input(products_page, add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given no fields have input
+
+    # When you click the cancel button
+    add_product_page.click(AddProductPage.CANCEL_BUTTON)
+
+    # Then you will be taken to commitquality.com/
+    assert add_product_page.current_url() == ProductsPage.URL
+
+    # And all products visible in the table are named either Product 1 or Product 2
+    num_rows = len(products_page.get_products_table_rows()) - 1 # -1 to account for header row
+    first_row_id = int(products_page.get_products_table_first_product_data()[0].text)
+
+    for id in range(first_row_id, first_row_id - num_rows, -1):
+        row = products_page.get_products_table_row_data(id)
+        name = row[1].text
+        assert (
+            (name == "Product 1") or (name == "Product 2")
+        )
+
+
+def test_click_cancel_button_everything_input(products_page, add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given all fields have input
+    add_product_page.type_field("testo", AddProductPage.NAME_FIELD)
+    add_product_page.type_field("12345", AddProductPage.PRICE_FIELD)
+    add_product_page.type_field("01012020", AddProductPage.DATE_FIELD)
+
+    # When you click the cancel button
+    add_product_page.click(AddProductPage.CANCEL_BUTTON)
+
+    # Then you will be taken to commitquality.com/
+    assert add_product_page.current_url() == ProductsPage.URL
+
+    # And all products visible in the table are named either Product 1 or Product 2
+    num_rows = len(products_page.get_products_table_rows()) - 1 # -1 to account for header row
+    first_row_id = int(products_page.get_products_table_first_product_data()[0].text)
+
+    for id in range(first_row_id, first_row_id - num_rows, -1):
+        row = products_page.get_products_table_row_data(id)
+        name = row[1].text
+        assert (
+            (name == "Product 1") or (name == "Product 2")
+        )
+
+
+def test_type_name_letters_numbers_symbols(add_product_page):
+    # Given commitquality.com/add-product
+
+    # When you type letters, numbers, and symbols in the name field
+    input = "test123!"
+    add_product_page.type_field(input, AddProductPage.NAME_FIELD)
+
+    # Then the input you typed will appear in the name field
+    assert add_product_page.get_field_text(AddProductPage.NAME_FIELD) == input
+
+
+def test_type_price_numbers(add_product_page):
+    # Given commitquality.com/add-product
+
+    # When you type numbers in the price field
+    input = "35"
+    add_product_page.type_field(input, AddProductPage.PRICE_FIELD)
+
+    # Then the input you typed will appear in the price field
+    assert add_product_page.get_field_text(AddProductPage.PRICE_FIELD) == input
+
+
+def test_type_price_letters_numbers_symbols(add_product_page):
+    # Given commitquality.com/add-product
+
+    # When you type letters numbers and symbols in the price field
+    add_product_page.type_field("test -123!", AddProductPage.PRICE_FIELD)
+
+    # Then only the numbers will appear in the price field
+    assert add_product_page.get_field_text(AddProductPage.PRICE_FIELD) == "123"
+
+
+def test_type_date_month_numbers(add_product_page):
+    # Given commitquality.com/add-product
+
+    # When you type a number in the date field
+    input = "05162020"
+    add_product_page.type_field(input, AddProductPage.DATE_FIELD)
+
+    # Then the date field's value will be the input you typed
+    assert add_product_page.get_field_text(AddProductPage.DATE_FIELD) == "2020-05-16"
+
+
+def test_type_date_month_letters_numbers_symbols(add_product_page):
+    # Given commitquality.com/add-product
+
+    # When you type letters numbers and symbols in the date field
+    input = "-05ab!16#A2020"
+    add_product_page.type_field(input, AddProductPage.DATE_FIELD)
+
+    # Then only the numbers will appear in the date field
+    assert add_product_page.get_field_text(AddProductPage.DATE_FIELD) == "2020-05-16"

@@ -511,3 +511,200 @@ def test_type_date_month_letters_numbers_symbols(add_product_page):
 
     # Then only the numbers will appear in the date field
     assert add_product_page.get_field_text(AddProductPage.DATE_FIELD) == "2020-05-16"
+
+
+@pytest.mark.parametrize("name", ["","t"])
+def test_tab_away_name_illegal(add_product_page,name):
+    # Given commitquality.com/add-product
+
+    # Given the name field has less than 2 characters input
+    add_product_page.type_field(name, AddProductPage.NAME_FIELD)
+
+    # When you tab away from the name field
+    add_product_page.tab_to_next_element()
+
+    # Then this error will appear above the name field: “Name must be at least 2 characters."
+    text = add_product_page.get_div_after_element(AddProductPage.NAME_LABEL).text
+    assert text == "Name must be at least 2 characters."
+
+    # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
+    text = add_product_page.get_all_fields_validation_text()
+    assert text == "Errors must be resolved before submitting"
+
+
+@pytest.mark.parametrize("name", ["te","testo"])
+def test_tab_away_name_legal(add_product_page,name):
+    # Given commitquality.com/add-product
+
+    # Given the name field has two or more characters input
+    add_product_page.type_field(name, AddProductPage.NAME_FIELD)
+
+    # When you tab away from the name field
+    add_product_page.tab_to_next_element()
+
+    # Then no errors appear on the page
+    assert (add_product_page.errors_exist() == False)
+
+
+@pytest.mark.parametrize("price", ["","12345678901"])
+def test_tab_away_price_illegal(add_product_page,price):
+    # Given commitquality.com/add-product
+
+    # Given the price field has either 0 characters input or over 10 characters input
+    add_product_page.type_field(price, AddProductPage.PRICE_FIELD)
+
+    # When you tab away from the price field
+    add_product_page.tab_to_next_element()
+
+    # Then this error will appear above the price field: "Price must not be empty and within 10 digits"
+    text = add_product_page.get_div_after_element(AddProductPage.PRICE_LABEL).text
+    assert text == "Price must not be empty and within 10 digits"
+
+    # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
+    text = add_product_page.get_all_fields_validation_text()
+    assert text == "Errors must be resolved before submitting"
+
+
+@pytest.mark.parametrize("price", ["1234567890","12345"])
+def test_tab_away_price_legal(add_product_page,price):
+    # Given commitquality.com/add-product
+
+    # Given the price field has between [1,10] characters input
+    add_product_page.type_field(price, AddProductPage.PRICE_FIELD)
+
+    # When you tab away from the name field
+    add_product_page.tab_to_next_element()
+
+    # Then no errors appear on the page
+    assert (add_product_page.errors_exist() == False)
+
+
+def test_tab_away_date_no_input(add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the date field has no characters input
+    add_product_page.type_field("", AddProductPage.DATE_FIELD)
+
+    # When you tab away from the price field
+    add_product_page.tab_to_next_element()
+    add_product_page.tab_to_next_element()
+    add_product_page.tab_to_next_element() # you need 3 here to get through the date input
+
+    # Then this error will appear above the date field: "Date must not be empty."
+    text = add_product_page.get_div_after_element(AddProductPage.DATE_LABEL).text
+    assert text == "Date must not be empty."
+
+    # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
+    text = add_product_page.get_all_fields_validation_text()
+    assert text == "Errors must be resolved before submitting"
+
+
+def test_tab_away_date_101_years_ago(add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the date field has the date from 101 years ago input
+    date = AddProductPage.get_date_num_years_ago(101)
+    add_product_page.type_field(date[1] + date[2] + date[0], AddProductPage.DATE_FIELD)
+
+    # When you tab away from the date field
+    add_product_page.tab_to_next_element()
+
+    # Then this error will appear above the date field: "Date must not be older than 100 years."
+    text = add_product_page.get_div_after_element(AddProductPage.DATE_LABEL).text
+    assert text == "Date must not be older than 100 years."
+
+    # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
+    text = add_product_page.get_all_fields_validation_text()
+    assert text == "Errors must be resolved before submitting"
+
+
+@pytest.mark.parametrize("years_ago", ["100","50"])
+def test_tab_away_date_legal(add_product_page,years_ago):
+    # Given commitquality.com/add-product
+
+    # Given the date field has a date up to 100 years before the current date
+    date = AddProductPage.get_date_num_years_ago(int(years_ago))
+    add_product_page.type_field(date[1] + date[2] + date[0], AddProductPage.DATE_FIELD)
+
+    # When you tab away from the date field
+    add_product_page.tab_to_next_element()
+
+    # Then no errors appear on the page
+    assert (add_product_page.errors_exist() == False)
+
+
+def test_tab_away_date_tomorrow(add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the date field has the date from tomorrow input
+    date = AddProductPage.get_date_tomorrow()
+    add_product_page.type_field(date[1] + date[2] + date[0], AddProductPage.DATE_FIELD)
+
+    # When you tab away from the date field
+    add_product_page.tab_to_next_element()
+
+    # Then this error will appear above the date field: "Date must not be in the future."
+    text = add_product_page.get_div_after_element(AddProductPage.DATE_LABEL).text
+    assert text == "Date must not be in the future."
+
+    # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
+    text = add_product_page.get_all_fields_validation_text()
+    assert text == "Errors must be resolved before submitting"
+
+
+def test_tab_away_date_leap_day_invalid(add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the date field has a leap day from a non-leap year input
+    add_product_page.type_field("02292015", AddProductPage.DATE_FIELD)
+
+    # When you tab away from the date field
+    add_product_page.tab_to_next_element()
+
+    # Then this error will appear above the date field: "Invalid date."
+    # Note: I made up this error text myself, since I knew the existing error text was inaccurate.
+    #       If this were a real product, I'd consult the design for the correct error text
+    text = add_product_page.get_div_after_element(AddProductPage.DATE_LABEL).text
+    assert text == "Invalid date."
+
+    # And this error will appear above the submit/cancel buttons: "Errors must be resolved before submitting"
+    text = add_product_page.get_all_fields_validation_text()
+    assert text == "Errors must be resolved before submitting"
+
+
+def test_tab_away_date_leap_day_valid(add_product_page):
+    # Given commitquality.com/add-product
+
+    # Given the date field has a leap day from a leap year input
+    add_product_page.type_field("02292016", AddProductPage.DATE_FIELD)
+
+    # When you tab away from the date field
+    add_product_page.tab_to_next_element()
+
+    # Then no errors appear on the page
+    assert (add_product_page.errors_exist() == False)
+
+
+def test_tab_order(add_product_page):
+    # Given commitquality.com/add-product
+
+    # When you tab through all elements on the pages
+    # Then the elements will be focused upon in the correct order
+    tab_order = [AddProductPage.PRODUCTS_LINK,
+                 AddProductPage.ADD_PRODUCT_LINK,
+                 AddProductPage.PRACTICE_LINK,
+                 AddProductPage.LEARN_LINK,
+                 AddProductPage.LOGIN_LINK,
+                 AddProductPage.NAME_FIELD,
+                 AddProductPage.PRICE_FIELD,
+                 AddProductPage.DATE_FIELD,
+                 AddProductPage.DATE_FIELD,
+                 AddProductPage.DATE_FIELD,
+                 AddProductPage.SUBMIT_BUTTON,
+                 AddProductPage.CANCEL_BUTTON
+                 ]
+    
+    for i in range(len(tab_order)):
+        add_product_page.tab_to_next_element()
+        focused_element = add_product_page.get_focused_element()
+        assert focused_element == add_product_page.get_element(tab_order[i])

@@ -34,7 +34,7 @@ class GenericPage:
         self.browser.get(self.URL)
 
 
-    def current_url(self):
+    def current_url(self) -> str:
         return self.browser.current_url
     
 
@@ -56,7 +56,7 @@ class GenericPage:
         element.click()
 
 
-    def exists(self, locator):
+    def exists(self, locator) -> bool:
         # TODO: this technically works, but waits the implicit wait amount before concluding that there are no table rows.
         # Update this to use driver.getPageSource() instead
         # https://www.tutorialspoint.com/how-do-i-verify-that-an-element-does-not-exist-in-selenium-2
@@ -85,3 +85,7 @@ class GenericPage:
     def get_field_text(self, locator):
         field = self.get_element(locator)
         return field.get_attribute("value")
+    
+
+    def refresh(self):
+        self.browser.refresh()

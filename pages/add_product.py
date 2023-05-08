@@ -50,18 +50,35 @@ class AddProductPage(GenericPage):
         return self.browser.find_element(*AddProductPage.ALL_FIELDS_VALIDATION).text
     
 
-    def get_date_num_years_ago(years: int):
-        # returns tuple ("YYYY","MM","DD")
-        num_years_ago = datetime.now() - relativedelta(years=years)
+    def format_datetime(datetime) -> tuple[str,str,str]:
+        # returns tuple ("YYYY","MM","DD"), in the format which the add-product page expects
+        year = str(datetime.year)
+        month = str(datetime.month)
+        day = str(datetime.day)
 
-        year = str(num_years_ago.year)
-        month = str(num_years_ago.month)
-        day = str(num_years_ago.day)
-
-        if (num_years_ago.month < 10):
+        if (datetime.month < 10):
             month = "0" + month
 
-        if (num_years_ago.day < 10):
+        if (datetime.day < 10):
             day = "0" + day
 
         return (year, month, day)
+
+
+    def get_date_num_years_ago(years: int):
+        # returns tuple ("YYYY","MM","DD")
+        num_years_ago = datetime.now() - relativedelta(years=years)
+        return AddProductPage.format_datetime(num_years_ago)
+    
+
+    def get_date_tomorrow() -> tuple[str,str,str]:
+        # returns tuple ("YYYY","MM","DD")
+        tomorrow = datetime.now() + relativedelta(days=1)
+        return AddProductPage.format_datetime(tomorrow)
+    
+
+    def errors_exist(self) -> bool:
+        errors = self.browser.find_elements(By.CLASS_NAME, 'error')
+        errors.extend(self.browser.find_elements(By.CLASS_NAME, 'error-message'))
+
+        return (len(errors) != 0)

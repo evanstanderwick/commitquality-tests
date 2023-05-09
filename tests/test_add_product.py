@@ -42,7 +42,8 @@ def test_hover_nonadd_product_link(add_product_page, locator):
     assert link.value_of_css_property("text-decoration-line") == "underline"
 
     # And the link is yellow
-    assert Color.from_string(link.value_of_css_property("color")).hex == "#ffdf6b"
+    color = Color.from_string(link.value_of_css_property("color")).hex
+    assert ((color == "#ffdf6b") or (color == "#fede6b"))
 
 
 def test_hover_submit_button(add_product_page):

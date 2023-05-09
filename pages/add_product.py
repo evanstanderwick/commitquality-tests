@@ -75,10 +75,11 @@ class AddProductPage(GenericPage):
         # returns tuple ("YYYY","MM","DD")
         tomorrow = datetime.now() + relativedelta(days=1)
         return AddProductPage.format_datetime(tomorrow)
-    
+
 
     def errors_exist(self) -> bool:
-        errors = self.browser.find_elements(By.CLASS_NAME, 'error')
-        errors.extend(self.browser.find_elements(By.CLASS_NAME, 'error-message'))
+        # errors = self.browser.find_elements(By.CLASS_NAME, 'error')
+        # errors.extend(self.browser.find_elements(By.CLASS_NAME, 'error-message'))
 
-        return (len(errors) != 0)
+        # return (len(errors) != 0)
+        return ("error" in self.browser.page_source)

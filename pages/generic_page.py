@@ -57,12 +57,10 @@ class GenericPage:
 
 
     def exists(self, locator) -> bool:
-        # TODO: this technically works, but waits the implicit wait amount before concluding that there are no table rows.
-        # Update this to use driver.getPageSource() instead
-        # https://www.tutorialspoint.com/how-do-i-verify-that-an-element-does-not-exist-in-selenium-2
-        # https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/WebElement.html#findElements-org.openqa.selenium.By-
-        elements = self.browser.find_elements(*locator)
-        return (len(elements) != 0)
+        raw_css_selector = locator[1]
+        if raw_css_selector[0]=="[":
+            raw_css_selector = raw_css_selector[1:len(locator[1]) - 1]
+        return raw_css_selector in self.browser.page_source
     
     
     def get_focused_element(self):

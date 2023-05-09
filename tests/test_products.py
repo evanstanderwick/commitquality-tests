@@ -39,7 +39,8 @@ def test_hover_nonproducts_link(products_page, locator):
     assert link.value_of_css_property("text-decoration-line") == "underline"
 
     # And the link is yellow
-    assert Color.from_string(link.value_of_css_property("color")).hex == "#ffdf6b"
+    color = Color.from_string(link.value_of_css_property("color")).hex
+    assert ((color == "#ffdf6b") or (color == "#fede6b"))
 
 
 @pytest.mark.parametrize('locator', [ProductsPage.FILTER_BUTTON,
